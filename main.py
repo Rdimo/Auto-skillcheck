@@ -1,43 +1,103 @@
-import cv2
-import numpy as np
+import os
+import sys
 import mss
-from pynput.keyboard import Key, Controller
+import cv2
+import psutil
+import subprocess
+import pkg_resources
+import numpy as np
 
-with mss.mss() as sct:
-    monitor = {"top": 470, "left": 890, "width": 140, "height": 140}
-    low_white = np.array([253, 253, 253])
-    high_white = np.array([255, 255, 255])
+from time import sleep
+from colorama import Fore
+from pynput.keyboard import Controller, Listener
 
-    low_red = np.array([160, 0, 0])
-    high_red = np.array([255, 30, 30])
-    keyboard = Controller()
+def install_lib(lib):
+    installed = {pkg.key for pkg in pkg_resources.working_set}
+    missing = lib - installed
 
-    cordsw = []
+    if missing:
+        print(f"{Fore.BLUE}{missing}{Fore.RED}not found! Installing it for you. . .{Fore.RESET}".replace("'","").replace("{","").replace("}"," "))
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install',*missing])
 
-    while True:
-        img = np.array(sct.grab(monitor))
-        rgb_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        maskw = cv2.inRange(rgb_image, low_white, high_white)
-        maskr = cv2.inRange(rgb_image, low_red, high_red)
+def checkIfProcessRunning(processName):
+    for proc in psutil.process_iter():
+        try:
+            if processName.lower() == proc.name().lower():
+                return False;
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
+    return True;
 
-        cordsr = []
+def main(key):
+    system = os.name
+    if system == 'nt':
+        os.system('cls')
+    elif system == 'posix':
+        os.system('clear')
+    else:
+        print('\n')*120
+    print(f"{Fore.MAGENTA}Auto Skill-check is running!{Fore.RESET}")
+    with mss.mss() as sct:
+        monitor = {"top": 470, "left": 890, "width": 140, "height": 140}
+        low_white = np.array([253, 253, 253])
+        high_white = np.array([255, 255, 255])
 
-        yw, xw = np.where(maskw != 0)
-        yr, xr = np.where(maskr != 0)
+        low_red = np.array([160, 0, 0])
+        high_red = np.array([255, 30, 30])
+        keyboard = Controller()
 
-        for i in range(len(yw)):
-            cordsw.append([yw[i], xw[i]])
-        for i in range(len(yr)):
-            cordsr.append([yr[i], xr[i]])
+        cordsw = []
 
-        for i in range(len(cordsr)):
-            if cordsr[i] in cordsw:
-                keyboard.press(Key.space) #change this to the key that you press when skillchecking
-                keyboard.release(Key.space) #change this to the key that you press when skillchecking
+        while True:
+            img = np.array(sct.grab(monitor))
+            rgb_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            maskw = cv2.inRange(rgb_image, low_white, high_white)
+            maskr = cv2.inRange(rgb_image, low_red, high_red)
+
+            cordsr = []
+
+            yw, xw = np.where(maskw != 0)
+            yr, xr = np.where(maskr != 0)
+
+            for i in range(len(yw)):
+                cordsw.append([yw[i], xw[i]])
+            for i in range(len(yr)):
+                cordsr.append([yr[i], xr[i]])
+
+            for i in range(len(cordsr)):
+                if cordsr[i] in cordsw:
+                    print(f"{Fore.GREEN}Doing skill-check for you{Fore.RESET}")
+                    keyboard.press(key)
+                    keyboard.release(key)
+                    cordsw = []
+                    break
+
+            if len(yw) == 0 and len(yr) == 0:
                 cordsw = []
-                break
+            if len(cordsr) == 0:
+                cordsw = []
 
-        if len(yw) == 0 and len(yr) == 0:
-            cordsw = []
-        if len(cordsr) == 0:
-            cordsw = []
+if __name__ == "__main__":
+    required = {
+        "numpy",
+        "mss",
+        "opencv-python",
+        "colorama",
+        "psutil",
+        "pynput"
+    }
+    install_lib(required)
+    sleep(0.5)
+    print(f"{Fore.CYAN}Input your key for skill-checking {Fore.RED}")
+
+    def on_press(key):
+        print(f"{Fore.LIGHTBLACK_EX}Key is {key}")
+        while checkIfProcessRunning("DeadByDaylight.exe"):
+            l = ['|', '/', '-', '\\']
+            for i in l+l+l:
+                sys.stdout.write('\r' + f'Please open Dead By Daylight '+i)
+                sys.stdout.flush()
+                sleep(0.2)
+        main(key)
+    with Listener(on_press=on_press) as listener:
+        listener.join()
