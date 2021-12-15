@@ -1,0 +1,6 @@
+mss
+opencv-python
+psutil
+numpy
+colorama 
+pynput

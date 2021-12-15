@@ -2,22 +2,15 @@ import os
 import sys
 import mss
 import cv2
+import ctypes
 import psutil
-import subprocess
-import pkg_resources
 import numpy as np
 
 from time import sleep
-from colorama import Fore
+from colorama import Fore, init
 from pynput.keyboard import Controller, Listener
-
-def install_lib(lib):
-    installed = {pkg.key for pkg in pkg_resources.working_set}
-    missing = lib - installed
-
-    if missing:
-        print(f"{Fore.BLUE}{missing}{Fore.RED}not found! Installing it for you. . .{Fore.RESET}".replace("'","").replace("{","").replace("}"," "))
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install',*missing])
+init(convert=True)
+system = os.name
 
 def checkIfProcessRunning(processName):
     for proc in psutil.process_iter():
@@ -29,7 +22,6 @@ def checkIfProcessRunning(processName):
     return True;
 
 def main(key):
-    system = os.name
     if system == 'nt':
         os.system('cls')
     elif system == 'posix':
@@ -78,21 +70,16 @@ def main(key):
                 cordsw = []
 
 if __name__ == "__main__":
-    required = {
-        "numpy",
-        "mss",
-        "opencv-python",
-        "colorama",
-        "psutil",
-        "pynput"
-    }
-    install_lib(required)
+    if system == 'nt':
+        ctypes.windll.kernel32.SetConsoleTitleW("DeadByDaylight-Auto-SkillCheck | Made By Rdimo#6969")
+    elif system == 'posix':
+        os.system("\033]0;DeadByDaylight-Auto-SkillCheck | Made By Rdimo#6969\a")
     sleep(0.5)
     print(f"{Fore.CYAN}Input your key for skill-checking {Fore.RED}")
 
     def on_press(key):
         print(f"{Fore.LIGHTBLACK_EX}Key is {key}")
-        while checkIfProcessRunning("DeadByDaylight.exe"):
+        while checkIfProcessRunning("DeadByDaylight-EGS-Shipping.exe"):
             l = ['|', '/', '-', '\\']
             for i in l+l+l:
                 sys.stdout.write('\r' + f'Please open Dead By Daylight '+i)
