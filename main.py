@@ -15,7 +15,7 @@ system = os.name
 def checkIfProcessRunning(processName):
     for proc in psutil.process_iter():
         try:
-            if processName.lower() == proc.name().lower():
+            if processName.lower() in proc.name().lower():
                 return False;
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             pass
@@ -58,7 +58,7 @@ def main(key):
 
             for i in range(len(cordsr)):
                 if cordsr[i] in cordsw:
-                    print(f"{Fore.GREEN}Doing skill-check for you{Fore.RESET}")
+                    print(f"{Fore.GREEN}Did skill-check for you{Fore.RESET}")
                     keyboard.press(key)
                     keyboard.release(key)
                     cordsw = []
@@ -79,7 +79,7 @@ if __name__ == "__main__":
 
     def on_press(key):
         print(f"{Fore.LIGHTBLACK_EX}Key is {key}")
-        while checkIfProcessRunning("DeadByDaylight-EGS-Shipping.exe"):
+        while checkIfProcessRunning("DeadByDaylight"):
             l = ['|', '/', '-', '\\']
             for i in l+l+l:
                 sys.stdout.write('\r' + f'Please open Dead By Daylight '+i)
