@@ -11,5 +11,5 @@ Love ❌ code ✅
 ### ❔・How to use
 1. Start off by installing [python](https://www.python.org/) ofc
 2. Open cmd in the same directory and type `pip install -r requirements.txt`
-3. To open the cheat do either `python main.py` in cmd that is in the same directory or open the exe found in the [releases](https://github.com/Rdimo/Auto-skillcheck/releases)
+3. To open the cheat open the exe found in the [releases](https://github.com/Rdimo/Auto-skillcheck/releases) or run it by doing `python main.py`
 4. The rest of the process is automated so open dead by daylight and your good to go!
