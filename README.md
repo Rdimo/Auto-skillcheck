@@ -1,6 +1,6 @@
 <p align="center">
-<img src="https://img.shields.io/github/stars/Rdimo/Auto-skillcheck?color=%d1062a&label=Stars&style=flat-square" </a>
-<img src="https://img.shields.io/github/forks/Rdimo/Auto-skillcheck?color=%d1062a&label=Forks&style=flat-square" </a>
+<img src="https://img.shields.io/github/stars/Rdimo/Auto-skillcheck?color=d1062a&label=Stars&style=flat-square" </a>
+<img src="https://img.shields.io/github/forks/Rdimo/Auto-skillcheck?color=d1062a&label=Forks&style=flat-square" </a>
 </p>
 
 #### Auto-skillcheck was made by
