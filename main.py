@@ -27,7 +27,7 @@ def main(key):
     elif system == 'posix':
         os.system('clear')
     else:
-        print('\n')*120
+        print('\n'*120)
     print(f"{Fore.MAGENTA}Auto Skill-check is running!{Fore.RESET}")
     with mss.mss() as sct:
         monitor = {"top": 470, "left": 890, "width": 140, "height": 140}
